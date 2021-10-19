@@ -90,6 +90,48 @@ dynamite_stars =
   dynamite_html %>% 
   html_elements(".review-rating") %>% 
   html_text()
+```
 
+## Water consumption in NYC using API
+
+```{r}
+water_df =
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.csv") %>% 
+  content()
+```
+
+Let's see what JSON looks like
+
+```{r}
+water_df =
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.json") %>% 
+  content("text") %>% 
+  jsonlite::fromJSON() %>% 
+  as_tibble()
+```
+
+## Behavioral risk factors (BRFSS) via API
+
+The default limit is 1000, but we can change it to 5000
+
+```{r}
+brfss_df =
+  GET("https://chronicdata.cdc.gov/resource/acme-vg9e.csv",
+      query = list("$limit" = 5000)) %>% 
+  content()
+```
+
+API is useful for evaluating data on a rolling basis (it automatically updates)
+
+## Pokeman API
+
+```{r}
+poke_data = 
+  GET("https://pokeapi.co/api/v2/pokemon/1")%>% 
+  content() 
+
+poke_data[["name"]]
+poke_data[["height"]]
+poke_data[["abilities"]]
 ```
 
