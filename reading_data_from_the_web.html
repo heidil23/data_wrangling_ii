@@ -170,36 +170,60 @@ pre code {
 </div>
 
 
-<div id="load-nsduh-dataset-from-the-web" class="section level2">
-<h2>Load NSDUH dataset from the web</h2>
-<p>There are 15 tables which are extracted. We can extract the first table using <code>first()</code> <code>slice()</code> can be used to remove rows</p>
+<div id="nsduh-dataset" class="section level2">
+<h2>NSDUH dataset</h2>
+<p>Load NSDUH dataset from the web There are 15 tables which are extracted. We can extract the first table using <code>first()</code> <code>slice()</code> can be used to remove rows</p>
 <pre class="r"><code>url = &quot;http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm&quot;
 
 drug_use_html =
   read_html(url)
 
-drug_use_html %&gt;% 
+drug_use_df =
+  drug_use_html %&gt;% 
   html_table() %&gt;% 
   first() %&gt;% 
   slice(-1)</code></pre>
-<pre><code>## # A tibble: 56 × 16
-##    State      `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-2014…
-##    &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;            
-##  1 Total U.S. 12.90a           13.36            0.002          13.28b           
-##  2 Northeast  13.88a           14.66            0.005          13.98            
-##  3 Midwest    12.40b           12.76            0.082          12.45            
-##  4 South      11.24a           11.64            0.029          12.02            
-##  5 West       15.27            15.62            0.262          15.53a           
-##  6 Alabama    9.98             9.60             0.426          9.90             
-##  7 Alaska     19.60a           21.92            0.010          17.30            
-##  8 Arizona    13.69            13.12            0.364          15.12            
-##  9 Arkansas   11.37            11.59            0.678          12.79            
-## 10 California 14.49            15.25            0.103          15.03            
-## # … with 46 more rows, and 11 more variables: 12-17(2014-2015) &lt;chr&gt;,
-## #   12-17(P Value) &lt;chr&gt;, 18-25(2013-2014) &lt;chr&gt;, 18-25(2014-2015) &lt;chr&gt;,
-## #   18-25(P Value) &lt;chr&gt;, 26+(2013-2014) &lt;chr&gt;, 26+(2014-2015) &lt;chr&gt;,
-## #   26+(P Value) &lt;chr&gt;, 18+(2013-2014) &lt;chr&gt;, 18+(2014-2015) &lt;chr&gt;,
-## #   18+(P Value) &lt;chr&gt;</code></pre>
+</div>
+<div id="star-wars" class="section level2">
+<h2>Star Wars</h2>
+<p>Get some star wars data… html_elements looks for CSS elements (identified by selector gadget)</p>
+<pre class="r"><code>sw_url = &quot;https://www.imdb.com/list/ls070150896/&quot;
+
+sw_html =
+  read_html(sw_url)
+
+sw_titles =
+  sw_html %&gt;% 
+  html_elements(&quot;.lister-item-header a&quot;) %&gt;% 
+  html_text()
+
+sw_revenue = 
+  sw_html %&gt;% 
+  html_elements(&quot;.text-small:nth-child(7) span:nth-child(5)&quot;) %&gt;%
+  html_text()
+
+sw_df =
+  tibble(
+    title = sw_titles,
+    revenue = sw_revenue
+  )</code></pre>
+</div>
+<div id="napoleon-dynamite" class="section level2">
+<h2>Napoleon Dynamite</h2>
+<pre class="r"><code>dynamite_url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
+
+dynamite_html =
+  read_html(dynamite_url)
+
+dynamite_review_titles =
+  dynamite_html %&gt;% 
+  html_elements(&quot;.a-text-bold span&quot;) %&gt;% 
+  html_text()
+
+dynamite_stars = 
+  dynamite_html %&gt;% 
+  html_elements(&quot;.review-rating&quot;) %&gt;% 
+  html_text()</code></pre>
 </div>
 
 
